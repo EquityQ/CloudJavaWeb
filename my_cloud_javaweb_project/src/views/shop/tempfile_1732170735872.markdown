@@ -1,0 +1,13 @@
+# EquityQ's Shop
+
+## 项目介绍
+EquityQ's Shop 是一个基于 Vue.js 的在线商店应用。用户可以浏览商品列表，查看商品详情，并将商品添加到购物车中。
+
+## 技术栈
+- **前端框架**: Vue.js
+- **UI 库**: Element UI
+- **状态管理**: Vuex (可选)
+- **路由管理**: Vue Router (可选)
+- **构建工具**: Webpack / Vite (根据实际情况选择)
+
+## 项目结构
