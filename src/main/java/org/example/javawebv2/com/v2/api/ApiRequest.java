@@ -443,7 +443,25 @@ public class ApiRequest {
         }
         return gson.toJson(map);
     }
-//    @PostMapping("/pay/create")
-//    public String createOrder(@RequestHeader String token,) {
-//    }
+    @RequestMapping("/pay/pay-order")
+    public String payForOrder(@RequestHeader String token,@RequestBody OrderRequest orderRequest) {
+        List<CartItem> items = orderRequest.getItems();
+        Gson gson = new Gson();
+        Map<String,Object> map = new HashMap<>();
+        if(tokenService.validateToken(token)){
+            String username = tokenService.getUsername(token);
+            boolean result = paymentService.payForOrder(username,items);
+            if(result){
+                map.put("Code",200);
+                map.put("Response","支付成功");
+            }else{
+                map.put("Code",500);
+                map.put("Response","支付失败");
+            }
+        }else{
+            map.put("Code",401);
+            map.put("Response","Token验证失败");
+        }
+        return gson.toJson(map);
+    }
 }

@@ -20,7 +20,8 @@ const config = {
         getOrders:"/order/getall",
         payInsert:"/pay/top-up",
         payMyinfo:"/pay/get",
-        payEx:"/pay/exchange"
+        payEx:"/pay/exchange",
+        payForOrder:"/pay/pay-order"
     },
     apiUrl: '/api'
 }

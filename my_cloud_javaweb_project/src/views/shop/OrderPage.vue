@@ -17,7 +17,7 @@
       </div>
       <br>
       <div style="display: flex;justify-content: right">
-        <el-button type="primary" style="min-width: 120px;" @click="payForIt">进行支付</el-button>
+        <el-button type="primary" style="min-width: 120px;" @click="processPayment">进行支付</el-button>
       </div>
     </el-card>
   </div>
@@ -25,6 +25,7 @@
 
 <script>
 import config from "@/class/config";
+
 export default {
   data() {
     return {
@@ -68,6 +69,35 @@ export default {
       }
     })
   },
+  methods:{
+    processPayment(){
+      var token = this.$cookies.get("token");
+      if(token==null||token==""){
+        this.$message.error("未检测到登录态,无法进行支付。");
+        this.$cookies.remove("token");
+        this.$router.push("/user/login");
+        return;
+      }
+      this.$axios.post(config.baseUrl+config.apiUrl+config.api.payForOrder,{
+        "items":this.cart
+      },{
+        headers:{
+          'Token':token
+        }
+      }).then(res=>{
+        if(res.data.Code===200){
+          this.$message.success(res.data.Response);
+          // 将购物车cookie清零
+          for (var i=0;i<this.cart.length;i++){
+            this.$cookies.remove(this.cart[i].name);
+          }
+          this.$router.push("/payment");
+        }else{
+          this.$message.error(res.data.Response);
+        }
+      })
+    }
+  }
 }
 
 </script>
