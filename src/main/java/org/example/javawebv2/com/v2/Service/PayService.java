@@ -61,6 +61,9 @@ public class PayService {
         }
     }
     public synchronized boolean payForOrder(String username, List<CartItem> items) {
+        if(items.size() == 0){
+            return false;
+        }
         // 1. 计算订单总价
         double totalAmount = 0;
         StringBuilder logBuilder = new StringBuilder();
