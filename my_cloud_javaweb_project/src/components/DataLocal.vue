@@ -71,6 +71,10 @@
               </el-timeline-item>
             </el-timeline>
           </div>
+<!--          button居中 提升权限-->
+          <div style="justify-content: center;display: flex;" v-show="!isAdmin">
+            <el-button type="primary" @click="changePermission()">提升权限</el-button>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -96,7 +100,7 @@ export default {
       versionNews:[
         {
           version: 'v1.2.0',
-          text: '永久弃用V1版本'
+          text: 'V1版本最后一次更新，已被标记为：弃用。'
         },
         {
           version: 'v2.0.0',
@@ -104,11 +108,11 @@ export default {
         },
           {
             version: 'v2.0.1',
-            text: '前端顺利切换至Vue3 + Element Plus + VueX + VueRouter架构。'
+            text: '前端顺利切换至Vue3 + Element Plus + VueX + VueRouter技术栈。'
           },
           {
             version: 'v2.1.0',
-            text: '后端顺利切换至Springboot + RocketMQ + SpringJDBC + Mysql架构。'
+            text: '后端顺利切换至Springboot + RocketMQ + SpringJDBC + Mysql技术栈。'
           },
           {
             version: 'v2.1.1',
@@ -120,11 +124,23 @@ export default {
           },
           {
             version: 'v2.2.1',
-            text: '当前版本，测试上线购物车功能。'
+            text: '测试上线购物车功能。'
           },
           {
             version: 'v2.2.2',
-            text: '计划开发中：预计上线结算功能。'
+            text: '上线结算支付功能，修复购物车灰度测试中出现的无法正常添加删除Bug问题。'
+          },
+          {
+            version: 'v2.2.3',
+            text: '修复部分前端后端交互问题。'
+          },
+          {
+            version: 'v2.2.4',
+            text: '对提升权限页面逻辑进行修改，同时移动入口至DashBoard。'
+          },
+          {
+            version: 'v2.2.5',
+            text: '当前版本，灰度测试支付系统稳定性。'
           },
 
       ],
@@ -259,6 +275,9 @@ export default {
     insertShop(){
       this.$router.push("/shop/insert");
     },
+    changePermission(){
+      this.$router.push("/user/code");
+    }
   }
 }
 </script>

@@ -23,6 +23,11 @@ public class loginService {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, password}, Integer.class);
         return count != null && count > 0;
     }
+    public boolean validateUser(String username) {
+        String sql = "SELECT COUNT(*) FROM userinfo WHERE username = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username}, Integer.class);
+        return count != null && count > 0;
+    }
     public boolean registerUser(String username, String password){
         String sql = "INSERT INTO userinfo (username, password) VALUES (?, ?)";
         try{

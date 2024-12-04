@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.javawebv2.com.v2.Class.*;
+import org.example.javawebv2.com.v2.Service.PayService;
 import org.example.javawebv2.com.v2.Service.PublicService;
 import org.example.javawebv2.com.v2.Service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,13 @@ public class ApiRequest {
     private final loginService loginService;
     private final TokenService tokenService;
     private final PublicService elementService;
+    private final PayService paymentService;
     @Autowired
-    public ApiRequest(loginService loginService, TokenService tokenService, PublicService elementService) {
+    public ApiRequest(loginService loginService, TokenService tokenService, PublicService elementService, PayService paymentService) {
         this.tokenService = tokenService;
         this.loginService = loginService;
         this.elementService = elementService;
+        this.paymentService = paymentService;
     }
     @RequestMapping("/captcha")
     public void captcha(HttpServletResponse resp, HttpServletRequest req) throws IOException {
@@ -354,4 +357,93 @@ public class ApiRequest {
         }
         return gson.toJson(map);
     }
+    @PostMapping("/order/getall")
+    public String getAllOrders(@RequestHeader String token) {
+        Gson gson = new Gson();
+        Map<String,Object> map = new HashMap<>();
+        if(tokenService.validateToken(token)){
+            List<Orders> orders = paymentService.getLogs(tokenService.getUsername(token));
+            map.put("Code",200);
+            map.put("Response","获取成功");
+            map.put("Orders",orders);
+        }else{
+            map.put("Code",401);
+            map.put("Response","Token验证失败");
+        }
+        return gson.toJson(map);
+    }
+    @PostMapping("/pay/top-up")
+    public String topUp(@RequestHeader String token,@RequestParam double value) {
+        Gson gson = new Gson();
+        Map<String,Object> map = new HashMap<>();
+        if(value <= 0){
+            map.put("Code",400);
+            map.put("Response","充值金额必须大于0");
+            return gson.toJson(map);
+        }
+        if(tokenService.validateToken(token)){
+            String username = tokenService.getUsername(token);
+            String permission = tokenService.getPermission(token);
+            if(permission.equals("admin")){
+                if(paymentService.addvalue(username,value)){
+                    map.put("Code",200);
+                    map.put("Response","充值成功");
+                    paymentService.addLog(username,value,"充值");
+                }else{
+                    map.put("Code",500);
+                    map.put("Response","服务器错误");
+                }
+            }else{
+                map.put("Code",402);
+                map.put("Response","权限不足");
+            }
+        }else{
+            map.put("Code",401);
+            map.put("Response","Token验证失败");
+        }
+        return gson.toJson(map);
+    }
+    @PostMapping("/pay/get")
+    public String getValue(@RequestHeader String token) {
+        Gson gson = new Gson();
+        Map<String,Object> map = new HashMap<>();
+        if(tokenService.validateToken(token)){
+            String username = tokenService.getUsername(token);
+            double value = paymentService.getvalue(username);
+            map.put("Code",200);
+            map.put("Response","获取成功");
+            map.put("Value",value);
+        }else{
+            map.put("Code",401);
+            map.put("Response","Token验证失败");
+        }
+        return gson.toJson(map);
+    }
+    @PostMapping("/pay/exchange")
+    public String exchange(@RequestHeader String token,@RequestParam double value,@RequestParam String towho) {
+        Gson gson = new Gson();
+        Map<String,Object> map = new HashMap<>();
+        //        验证towho是否存在
+        if(loginService.validateUser(towho)){
+            if(tokenService.validateToken(token)){
+                if(paymentService.exchange(tokenService.getUsername(token),value,towho)){
+                    map.put("Code",200);
+                    map.put("Response","转账成功");
+                }else{
+                    map.put("Code",500);
+                    map.put("Response","参数错误");
+                }
+            }else{
+                map.put("Code",401);
+                map.put("Response","Token验证失败");
+            }
+        }else{
+            map.put("Code",404);
+            map.put("Response","转账用户不存在");
+        }
+        return gson.toJson(map);
+    }
+//    @PostMapping("/pay/create")
+//    public String createOrder(@RequestHeader String token,) {
+//    }
 }

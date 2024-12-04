@@ -41,9 +41,9 @@ export default {
         this.$message.success(res.data.Response);
       //   刷新页面
       //   等待一秒
-        this.$message.success("一秒后刷新页面");
+        this.$message.success("正在将数据更新至DashBoard");
         setTimeout(() => {
-          this.$router.go(0);
+          this.$router.push("/dashboard");
         }, 1000);
       })
     }

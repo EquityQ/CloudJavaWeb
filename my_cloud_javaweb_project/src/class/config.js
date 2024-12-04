@@ -17,6 +17,10 @@ const config = {
         uploadImg:"/img/base64",
         updateShop:"/element/change",
         insertShop:"/element/insert",
+        getOrders:"/order/getall",
+        payInsert:"/pay/top-up",
+        payMyinfo:"/pay/get",
+        payEx:"/pay/exchange"
     },
     apiUrl: '/api'
 }

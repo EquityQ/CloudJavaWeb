@@ -43,6 +43,16 @@ const router = createRouter({
         name: "cart",
         component: () => import("../views/shop/CartPage.vue"),
       },
+      {
+        path: "/payment",
+        name: "payment",
+        component: () => import("../views/payment/LocalPage.vue"),
+      },
+      {
+        path: "/order",
+        name: "order",
+        component: () => import("../views/shop/OrderPage.vue"),
+      },
   ],
 });
 router.beforeEach((to, from, next) => {

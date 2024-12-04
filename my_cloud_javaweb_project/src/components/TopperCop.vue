@@ -16,8 +16,8 @@
           <ElCol :span="8" class="topper-center">
             <ElLink v-bind:href="'#/dashboard'" class="topper-link">Dashboard</ElLink>
             <ElLink v-bind:href="'/'" class="topper-link">Shop</ElLink>
-            <ElLink v-bind:href="'#/user/code'" class="topper-link">Improve Permission</ElLink>
             <ElLink v-bind:href="'#/cart'" class="topper-link">Cart</ElLink>
+            <ElLink v-bind:href="'#/payment'" class="topper-link">Payment</ElLink>
           </ElCol>
         </ElRow>
       </ElCol>

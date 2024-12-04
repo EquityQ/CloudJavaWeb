@@ -3,7 +3,7 @@
     <el-card class="box-card" style="margin-top: 20px">
       <template #header>
         <div class="card-header">
-          <span>购物车</span>
+          <span>你的购物车</span>
         </div>
       </template>
       <el-table :data="cart" style="width: 100%">
@@ -20,6 +20,10 @@
       </el-table>
       <div class="total">
         <strong>总价: ￥{{ total }}</strong>
+      </div>
+      <br>
+      <div style="display: flex;justify-content: right">
+        <el-button type="primary" style="min-width: 120px;" @click="payForItem">提交订单</el-button>
       </div>
     </el-card>
   </div>
@@ -58,6 +62,9 @@ export default {
 
   },
   methods: {
+    payForItem(){
+      this.$router.push("/order");
+    },
     removeFromCart(item) {
       var token = this.$cookies.get("token");
       if(token==null&&token==""){
@@ -86,14 +93,15 @@ export default {
     //   直接修改cookie
       this.$cookies.set(item.name,item.quantity,{path:"/",expires:30});
     //   更新数据
-      this.total = item.quantity*item.price;
+      var total = 0;
       for (var i=0;i<this.cart.length;i++){
         if(this.cart[i].name===item.name){
           this.cart[i].quantity = item.quantity;
           this.cart[i].localtotal = item.quantity*item.price;
-          break;
         }
+        total += parseFloat(this.cart[i].localtotal);
       }
+      this.total = total;
     }
   }
 }
